@@ -1,8 +1,8 @@
 -- UhhhhhhReanim Executor Folder Scanner
 print("🔐 Loading UhhhhhhReanim executor folder scanner...")
 
--- ================== LOAD CONFIG FROM VERCEL ==================
-local baseUrl = "https://your-project-name.vercel.app/"  -- ← CHANGE TO YOUR VERCEL URL
+-- ================== CONFIG ==================
+local baseUrl = "https://shiny-carnival-kappa.vercel.app/"
 
 local ownerData = game:HttpGet(baseUrl .. "owner.txt")
 local blacklistData = game:HttpGet(baseUrl .. "blacklisted.txt")
@@ -35,10 +35,9 @@ print("🔍 Checking for UhhhhhhReanim folder in executor workspace...")
 
 local folderName = "UhhhhhhReanim"
 
--- Check if folder exists in executor files
 if not isfolder(folderName) then
     warn("❌ UhhhhhhReanim folder not found in executor workspace.")
-    print("Make sure the folder exists next to your executor scripts.")
+    print("Create the folder next to your executor.")
     return
 end
 
@@ -46,10 +45,10 @@ print("✅ Found UhhhhhhReanim folder! Scanning contents...")
 
 local files = listfiles(folderName)
 
-print("📂 Found " .. #files .. " items in folder.")
+print("📂 Found " .. #files .. " items.")
 
 for _, filePath in ipairs(files) do
-    local fileName = filePath:match("([^/\\]+)$")  -- get just the filename
+    local fileName = filePath:match("([^/\\]+)$")
     
     print("\n📄 File: " .. fileName)
     
@@ -59,9 +58,9 @@ for _, filePath in ipairs(files) do
         end)
         
         if success and content and #content > 0 then
-            print("   📜 Lua file (" .. #content .. " characters)")
-            local preview = content:sub(1, 400)
-            if #content > 400 then 
+            print("   📜 Lua file (" .. #content .. " chars)")
+            local preview = content:sub(1, 450)
+            if #content > 450 then 
                 preview = preview .. "\n... (truncated)" 
             end
             print(preview)
