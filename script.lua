@@ -1,4 +1,4 @@
--- UhhhhhhReanim Executor Folder Scanner
+-- UhhhhhhReanim Executor Folder Scanner + Colored Output
 print("🔐 Loading UhhhhhhReanim executor folder scanner...")
 
 -- ================== CONFIG ==================
@@ -30,27 +30,69 @@ end
 
 print("✅ Owner access granted for " .. player.Name)
 
+-- ================== COLORED PRINT MODULE ==================
+--[[
+	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+]]
+local Modules = {
+    Colors = {
+        ["Green"] = "0,255,0",
+        ["Cyan"] = "33, 161, 163",
+        ["Yellow"] = "255,255,0",
+        ["Red"] = "255,0,0",
+        ["White"] = "255,255,255"
+    }
+}
+
+Modules.ChangeColor = function() 
+    game:GetService("RunService").Heartbeat:Connect(function()
+    	if game:GetService("CoreGui"):FindFirstChild("DevConsoleMaster") then 
+	        for _, v in pairs(game:GetService("CoreGui"):FindFirstChild("DevConsoleMaster"):GetDescendants()) do 
+	            if v:IsA("TextLabel") then 
+	                v.RichText = true 
+	            end 
+	        end 
+	    end
+    end)
+end
+
+Modules.print = function(color, text, size)
+	if not Modules.Colors[color] then 
+		warn("Color was not found!")
+		return 
+	end 
+	
+    local Text = '<font color="rgb(' .. Modules.Colors[color] .. ')"'
+    if size then
+        Text = Text .. ' size="' .. tostring(size) .. '"'
+    end
+    Text = Text .. '>' .. tostring(text) .. '</font>'
+    print(Text)
+end
+
+Modules.ChangeColor()
+
 -- ================== EXECUTOR FOLDER SCAN ==================
-print("🔍 Checking for UhhhhhhReanim folder in executor workspace...")
+Modules.print("Cyan", "🔍 Checking for UhhhhhhReanim folder in executor workspace...")
 
 local folderName = "UhhhhhhReanim"
 
 if not isfolder(folderName) then
-    warn("❌ UhhhhhhReanim folder not found in executor workspace.")
-    print("Create the folder next to your executor.")
+    Modules.print("Red", "❌ UhhhhhhReanim folder not found in executor workspace.")
+    Modules.print("Yellow", "Create the folder next to your executor.")
     return
 end
 
-print("✅ Found UhhhhhhReanim folder! Scanning contents...")
+Modules.print("Green", "✅ Found UhhhhhhReanim folder! Scanning contents...")
 
 local files = listfiles(folderName)
 
-print("📂 Found " .. #files .. " items.")
+Modules.print("Cyan", "📂 Found " .. #files .. " items.")
 
 for _, filePath in ipairs(files) do
     local fileName = filePath:match("([^/\\]+)$")
     
-    print("\n📄 File: " .. fileName)
+    Modules.print("White", "\n📄 File: " .. fileName)
     
     if fileName:lower():find("%.lua$") or fileName:lower():find("%.luau$") then
         local success, content = pcall(function()
@@ -58,18 +100,18 @@ for _, filePath in ipairs(files) do
         end)
         
         if success and content and #content > 0 then
-            print("   📜 Lua file (" .. #content .. " chars)")
+            Modules.print("Green", "   📜 Lua file (" .. #content .. " chars)")
             local preview = content:sub(1, 450)
             if #content > 450 then 
                 preview = preview .. "\n... (truncated)" 
             end
-            print(preview)
+            print(preview)  -- raw print for code preview
         else
-            print("   ⚠️ Could not read file")
+            Modules.print("Red", "   ⚠️ Could not read file")
         end
     else
-        print("   🔹 Other file type")
+        Modules.print("Yellow", "   🔹 Other file type")
     end
 end
 
-print("\n✅ Executor folder scan finished!")
+Modules.print("Green", "\n✅ Executor folder scan finished!")
